@@ -174,11 +174,14 @@
             - not ubtu22cis_no_owner_adjust
             - ubtu22cis_6_1_10_no_user_items_flatten | length > 0
 
+      - name: "6.1.10 | Display unowned_owner"
+        debug:
+          msg: "ubtu22cis_unowned_owner: {{ ubtu22cis_unowned_owner }}"
+
       - name: "6.1.10 | PATCH | Ensure no unowned files or directories exist | Set unowned files/directories to configured owner"
         ansible.builtin.file:
             path: "{{ item }}"
             owner: "{{ ubtu22cis_unowned_owner }}"
-            group: "{{ ubtu22cis_unowned_owner }}"
         with_items:
             - "{{ ubtu22cis_6_1_10_no_user_items_flatten }}"
         when:
@@ -219,9 +222,12 @@
         ansible.builtin.set_fact:
             ubtu22cis_6_1_11_ungrouped_items_flatten: "{{ ubtu22cis_6_1_11_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
 
-      - name: Display ubtu22cis_6_1_11_ungrouped_items_flatten
+      - name: "6.1.11 | Display unowned group"
         debug:
-          msg: "ubtu22cis_6_1_11_ungrouped_items_flatten:-\n {{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
+          msg: 
+             - "ubtu22cis_ungrouped_group - {{ ubtu22cis_ungrouped_group }}"
+             - "ubtu22cis_6_1_11_ungrouped_items_flatten :- "
+             - "{{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Alert on ungrouped files and directories"
         ansible.builtin.debug:
@@ -229,7 +235,7 @@
                 - "Warning!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign a group"
                 - "ubtu22cis_6_1_11_ungrouped_items_flatten:-\n{{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
-                - "group:-\n {{ ubtu22cis_ungrouped_group }}"
+                - "group - {{ ubtu22cis_ungrouped_group }}"
         when:
             - not ubtu22cis_no_group_adjust
             - ubtu22cis_6_1_11_ungrouped_items_flatten | length > 0
@@ -237,12 +243,15 @@
       - name: "6.1.11 | PATCH | Ensure no ungrouped files or directories exist | Set ungrouped files/directories to configured group"
         ansible.builtin.file:
             path: "{{ item }}"
+            owner: "root"
             group: "{{ ubtu22cis_ungrouped_group }}"
+            mode: 0644
         with_items:
             - "{{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
         when:
             - ubtu22cis_no_group_adjust
             - ubtu22cis_6_1_11_ungrouped_items_flatten | length > 0
+            - not item | regex_search("^\/snap\/(.*)$")
 
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Warn Count"
         ansible.builtin.import_tasks: warning_facts.yml
