@@ -218,6 +218,10 @@
         ansible.builtin.set_fact:
             ubtu22cis_6_1_11_ungrouped_items_flatten: "{{ ubtu22cis_6_1_11_ungrouped_items.results | map(attribute='stdout_lines') | flatten }}"
 
+      - name: Display ubtu22cis_6_1_11_ungrouped_items_flatten
+        debug:
+          msg: "ubtu22cis_6_1_11_ungrouped_items_flatten:-\n {{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
+
       - name: "6.1.11 | AUDIT | Ensure no ungrouped files or directories exist | Alert on ungrouped files and directories"
         ansible.builtin.debug:
             msg:
