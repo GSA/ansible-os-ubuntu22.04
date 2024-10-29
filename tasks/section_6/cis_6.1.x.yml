@@ -178,6 +178,7 @@
         ansible.builtin.file:
             path: "{{ item }}"
             owner: "{{ ubtu22cis_unowned_owner }}"
+            group: "{{ ubtu22cis_unowned_owner }}"
         with_items:
             - "{{ ubtu22cis_6_1_10_no_user_items_flatten }}"
         when:
