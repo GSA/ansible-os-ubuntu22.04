@@ -223,7 +223,8 @@
             msg:
                 - "Warning!! You have ungrouped files/directories and are configured to not auto-remediate for this task"
                 - "Please review the files/directories below and assign a group"
-                - "{{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
+                - "ubtu22cis_6_1_11_ungrouped_items_flatten:-\n{{ ubtu22cis_6_1_11_ungrouped_items_flatten }}"
+                - "group:-\n {{ ubtu22cis_ungrouped_group }}"
         when:
             - not ubtu22cis_no_group_adjust
             - ubtu22cis_6_1_11_ungrouped_items_flatten | length > 0
