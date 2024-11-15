@@ -190,8 +190,6 @@
 - name: Include more_task
   ansible.builtin.import_tasks: more_task.yml
 
-- name: Include ubuntu ntp_pool removal task
-  ansible.builtin.import_tasks: ntp_pool.yml
 
 - name: run auditd logic
   ansible.builtin.import_tasks: auditd.yml
