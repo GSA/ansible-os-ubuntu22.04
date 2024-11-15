@@ -1,0 +1,10 @@
+---
+## Remove ntp time pool in /etc/ntp.conf
+## Time synchronization server needs to be updated to 169.254.169.123
+## Secops firewall will block any other time server outside the one directly from amazon
+
+- name: remove ubuntu ntp pool 
+  replace:
+    path: /etc/ntp.conf
+    regexp: '^pool [0-3]\.ubuntu\.pool\.ntp\.org iburst'
+    replace: ''
